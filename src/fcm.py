@@ -40,18 +40,19 @@ class Fcm:
         return res / other
 
     def add_file(self, path: str):
+        assert exists(path)
+
         file = open(path, "r")
         text = file.read()
+
+        hash = md5()
+        hash.update(text.encode("utf-8"))
+        hash = hash.hexdigest()
+
         i = 0
 
-        hashed = md5()
-        hashed.update(text.encode("utf-8"))
-        hash = hashed.hexdigest()
-
-        if exists(f"cache/{hash}"):
-            file = open(f"cache/{hash}", "rb")
-            self.index = pickle.load(file)
-            return None
+        if self.load_cache(hash):
+            return
 
         while i < len(text):
             if i + self.context_size >= len(text):
@@ -62,7 +63,7 @@ class Fcm:
             self.add_sequence(before, after)
             i += 1
 
-        self.save_cache(f"cache/{hash}")
+        self.save_cache(hash)
 
     def add_sequence(self, before: str, after: str):
         assert len(before) == self.context_size
@@ -71,6 +72,17 @@ class Fcm:
 
         self.index[before][after] += 1
 
-    def save_cache(self, path: str):
+    def save_cache(self, hash: str):
+        path = f"cache/{hash}"
         file = open(path, "wb")
         pickle.dump(self.index, file)
+
+    def load_cache(self, hash: str):
+        path = f"cache/{hash}"
+
+        if not exists(path):
+            return False
+
+        file = open(path, "rb")
+        self.index.update(pickle.load(file))
+        return True
