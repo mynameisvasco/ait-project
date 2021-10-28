@@ -11,4 +11,4 @@ assert fcm.get_all_contexts() == set((('a', 'b', 'b'), ('a', 'b', 'a'), ('b', 'b
 
 fcm = Fcm(printable, 0.01, 3)
 hash = fcm.add_file("example/example.txt")
-assert fcm.get_probability("the", " ") == 0.5803788677312265
+assert fcm.get_probability(" ", "the") == 0.5803788677312265
