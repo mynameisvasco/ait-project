@@ -24,6 +24,9 @@ class Fcm:
     def get_context(self, context: str):
         return self.index[context]
 
+    def get_context_size(self):
+        return self.context_size
+
     def get_symbol_occurrence(self, symbol: str, context: str):
         return self.index[context][symbol]
 
