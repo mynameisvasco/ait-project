@@ -1,11 +1,9 @@
-from os.path import exists
 from typing import Dict, Set
 from collections import defaultdict
-import pickle
 from math import log2
 
+
 class Fcm:
-    name: str
     index: Dict[str, Dict[str, int]]
     symbols: Set[str]
     smoothing: float
@@ -13,12 +11,11 @@ class Fcm:
     context_ocurrences: Dict[str, int]
     total_ocurrences: int
 
-    def __init__(self, name: str, smoothing: float, context_size: int) -> None:
+    def __init__(self, smoothing: float, context_size: int) -> None:
         assert smoothing > 0 and smoothing <= 1
         assert context_size > 0
 
-        self.name = name
-        self.index = defaultdict(dict)
+        self.index = defaultdict(lambda: defaultdict(int))
         self.symbols = set()
         self.smoothing = smoothing
         self.context_size = context_size
@@ -26,12 +23,16 @@ class Fcm:
         self.total_ocurrences = 0
 
     def get_context(self, context: str):
+        assert len(context) == self.context_size
+
         return self.index[context]
 
     def get_context_size(self):
         return self.context_size
 
     def get_symbol_occurrence(self, symbol: str, context: str):
+        assert len(context) == self.context_size
+
         return self.index[context][symbol]
 
     def get_symbol_probability(self, symbol: str, context: str):
@@ -47,38 +48,36 @@ class Fcm:
         return res / other
 
     def get_context_probability(self, context: str):
-
-        res,total = 0,0
+        assert len(context) == self.context_size
+        res, total = 0, 0
 
         for symbol in self.index[context]:
             res += self.index[context][symbol]
-        
-        # for state in self.index:
-        #     for symbol in self.index[state]:
-        #         total += self.index[state][symbol]
+
         total = self.total_ocurrences
 
         return res / total
 
     def get_information_amount(self, symbol: str, context: str):
-        return -log2( self.get_symbol_probability(symbol, context) )
+        return -log2(self.get_symbol_probability(symbol, context))
 
     def get_context_entropy(self, context: str):
-        
+
         res = 0
-        
+
         for symbol in self.index[context]:
-            res += self.get_information_amount(symbol, context) * self.get_symbol_probability(symbol, context)
-        
+            res += self.get_information_amount(symbol, context) * \
+                self.get_symbol_probability(symbol, context)
+
         return res
-    
+
     def get_model_entropy(self):
-        
         res = 0
-        
+
         for context in self.index:
-            res += self.get_context_probability(context) * self.get_context_entropy(context)
-        
+            res += self.get_context_probability(context) * \
+                self.get_context_entropy(context)
+
         return res
 
     def add_symbols_from_text(self, text: str):
