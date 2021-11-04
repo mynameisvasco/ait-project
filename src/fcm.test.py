@@ -1,7 +1,7 @@
 from fcm import Fcm
 from generator import Generator
 
-fcm = Fcm("example.txt", 0.01, 3)
+fcm = Fcm(0.01, 3)
 fcm.add_file("example/example.txt")
 generator = Generator(fcm)
 
