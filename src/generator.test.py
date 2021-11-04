@@ -7,4 +7,7 @@ fcm.add_file("example/crimepadreamaro.txt")
 fcm.add_file("example/mandarim.txt")
 
 generator = Generator(fcm)
-print(generator.generator(input("Prior: "), 255))
+generated_text = generator.generate("ola ", 255)
+
+assert len(generated_text) == 255
+assert "ola" in generated_text

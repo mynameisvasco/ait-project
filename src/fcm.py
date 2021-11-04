@@ -19,12 +19,16 @@ class Fcm:
         self.context_size = context_size
 
     def get_context(self, context: str):
+        assert len(context) == self.context_size
+
         return self.index[context]
 
     def get_context_size(self):
         return self.context_size
 
     def get_symbol_occurrence(self, symbol: str, context: str):
+        assert len(context) == self.context_size
+
         return self.index[context][symbol]
 
     def get_symbol_probability(self, symbol: str, context: str):
@@ -39,7 +43,7 @@ class Fcm:
         return res / other
 
     def get_context_probability(self, context: str):
-
+        assert len(context) == self.context_size
         res, total = 0, 0
 
         for symbol in self.index[context]:
@@ -65,7 +69,6 @@ class Fcm:
         return res
 
     def get_model_entropy(self):
-
         res = 0
 
         for context in self.index:
