@@ -39,11 +39,8 @@ class Fcm:
         assert len(context) == self.context_size
 
         res = self.index[context][symbol] + self.smoothing
-        other = self.smoothing * len(self.symbols)
-
-        # for key in self.index[context]:
-        #     other += self.index[context][key]
-        other = self.context_ocurrences[context]
+        other = self.context_ocurrences[context] + \
+            self.smoothing * len(self.symbols)
 
         return res / other
 
@@ -80,9 +77,6 @@ class Fcm:
 
         return res
 
-    def add_symbols_from_text(self, text: str):
-        self.symbols.update(set(text))
-
     def add_file(self, path: str):
         file = open(path, "r")
         text = file.read()
@@ -91,30 +85,17 @@ class Fcm:
     def add_text(self, text: str):
         assert len(text) > 0
 
-        i = 0
-        self.add_symbols_from_text(text)
+        self.symbols.update(set(text))
 
-        while i < len(text):
-            if i + self.context_size >= len(text):
-                break
-
+        for i in range(len(text) - self.context_size):
             context = text[i: i + self.context_size]
             symbol = text[i + self.context_size]
             self.add_sequence(symbol, context)
-            i += 1
 
     def add_sequence(self, symbol: str, context: str):
         assert len(symbol) == 1
         assert len(context) == self.context_size
 
-        if symbol in self.index[context]:
-            self.index[context][symbol] += 1
-        else:
-            self.index[context][symbol] = 1
-            
-        if context in self.context_ocurrences:
-            self.context_ocurrences[context] += 1
-        else:
-            self.context_ocurrences[context] = 1
-        
+        self.index[context][symbol] += 1
+        self.context_ocurrences[context] += 1
         self.total_ocurrences += 1
