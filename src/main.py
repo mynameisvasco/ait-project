@@ -33,6 +33,8 @@ class Main:
         if args.prior and args.length:
             generator = Generator(fcm)
             print(generator.generate(args.prior, args.length))
+        else:
+            print(fcm.get_model_entropy(), "= model entropy")
 
 
 if __name__ == "__main__":
