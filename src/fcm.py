@@ -10,6 +10,8 @@ class Fcm:
     symbols: Set[str]
     smoothing: float
     context_size: int
+    context_ocurrences: Dict[str, int]
+    total_ocurrences: int
 
     def __init__(self, name: str, smoothing: float, context_size: int) -> None:
         assert smoothing > 0 and smoothing <= 1
@@ -20,6 +22,8 @@ class Fcm:
         self.symbols = set()
         self.smoothing = smoothing
         self.context_size = context_size
+        self.context_ocurrences = defaultdict(int)
+        self.total_ocurrences = 0
 
     def get_context(self, context: str):
         return self.index[context]
@@ -36,8 +40,9 @@ class Fcm:
         res = self.index[context][symbol] + self.smoothing
         other = self.smoothing * len(self.symbols)
 
-        for key in self.index[context]:
-            other += self.index[context][key]
+        # for key in self.index[context]:
+        #     other += self.index[context][key]
+        other = self.context_ocurrences[context]
 
         return res / other
 
@@ -48,9 +53,10 @@ class Fcm:
         for symbol in self.index[context]:
             res += self.index[context][symbol]
         
-        for state in self.index:
-            for symbol in self.index[state]:
-                total += self.index[state][symbol]
+        # for state in self.index:
+        #     for symbol in self.index[state]:
+        #         total += self.index[state][symbol]
+        total = self.total_ocurrences
 
         return res / total
 
@@ -106,3 +112,10 @@ class Fcm:
             self.index[context][symbol] += 1
         else:
             self.index[context][symbol] = 1
+            
+        if context in self.context_ocurrences:
+            self.context_ocurrences[context] += 1
+        else:
+            self.context_ocurrences[context] = 1
+        
+        self.total_ocurrences += 1
