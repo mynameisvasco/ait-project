@@ -8,6 +8,8 @@ The developed program is structured following object-oriented programming princi
 #Instructions for the program execution
 ***
 
+The following instructions are needed to execute the program
+
 python3 src/main.py 0.1 5 examples/maias.txt examples/mandarim.txt 
 
 In this case, the program is running with the smoothing parameter equals to 0.1, the context size equals to 5 and the texts to train the model mais.txt and madarim.txt. The expected result is the entropy of that model. 
