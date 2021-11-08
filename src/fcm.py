@@ -49,9 +49,9 @@ class Fcm:
         res, total = 0, 0
 
         for symbol in self.index[context]:
-            res += self.index[context][symbol]
+            res += self.index[context][symbol] + self.smoothing
 
-        total = self.total_ocurrences
+        total = self.total_ocurrences + self.smoothing * len(self.symbols)
 
         return res / total
 
