@@ -13,7 +13,7 @@ The following instructions are needed to execute the program
 
 In this case, the program is running with the smoothing parameter equals to 0.1, the context size equals to 5 and the texts to train the model mais.txt and madarim.txt. The expected result is the entropy of that model. 
 
-`$ python3 src/main.py 0.1 4 examples/maias.txt examples/mandarim.txt --prior="como" --length=512    
+`$ python3 src/main.py 0.1 4 examples/maias.txt examples/mandarim.txt --prior="como" --length=512`    
 	
 In this case, the program is running with the smoothing parameter equals to 0.1, the context size equals to 4, the texts to train the model mais.txt and madarim.txt,  the prior the word "como" and the length 512. The expected result is a text with 512 symbols starting with the word "como"
  
