@@ -1,6 +1,5 @@
-# ait-project
+# AIT Project 1
 
-# Project name
 ***
 The developed program is structured following object-oriented programming principles. Therefore, the class Fcm is responsible for collecting statistical information about texts, using finite-context models. In particular, for calculating the entropy of the text, using probabilities of symbols and contexts.
  After that, the class Generator is responsible for automatic text generation based on a finite-context model learned beforehand. Furthermore, a class called Main is the entry point to the program. It is responsible for reading the command line arguments and parsing them. After that, it instantiates both Fcm and Generator using the corrected arguments provided before.
